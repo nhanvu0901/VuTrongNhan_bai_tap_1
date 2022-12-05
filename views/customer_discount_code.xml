@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tes1_customer_action" model="ir.actions.server">
+                <field name="name">Customer discount code</field>
+                <field name="model_id" ref="model_res_partner"/>
+
+                <field name="state">code</field>
+                <field name="code">
+                    action = model._display_customer_discount_code()
+                </field>
+    </record>
+
+   <menuitem name="Customer Discount Code" id="Customer_discount_code_root" parent="menu_root" action="tes1_customer_action"/>
+
+</odoo>

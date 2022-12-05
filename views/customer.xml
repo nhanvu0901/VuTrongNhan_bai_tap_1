@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='tes1_customer_action' model='ir.actions.act_window'><!--khai bao action -->
+        <field name="name">Customer Form</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="tes1_customer_view_form" model="ir.ui.view">
+        <field name="name">Customer Form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/> <!--External ID cua view form-->
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name ='vat']" position="after">
+                <field name="discount_code" groups="test1.group_adavance_sale"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tes1_customer_view_tree" model="ir.ui.view">
+        <field name="name">Customer List</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name ='country_id']" position="after">
+                <field name="discount_code" groups="test1.group_adavance_sale"/>
+            </xpath>
+        </field>
+    </record>
+
+   <record id="action_create_appointments" model="ir.actions.server"> <!--to view the wizard in the action button-->
+        <field name="name">Mass Update</field>
+        <field name="model_id" ref="test1.model_res_partner"/>
+        <field name="binding_model_id" ref="test1.model_res_partner"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if record:
+                action_values = env.ref('test1.action_create_customer').sudo().read()[0]
+                action_values.update({'context': env.context})
+                action = action_values
+        </field>
+    </record>
+
+
+    <!-- Search View -->
+    <record id="tes1_customer_view_search" model="ir.ui.view">
+        <field name="name">Search Partner</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Customer">
+                <field name="name"/>
+                <filter string="customer has discount code" name="customer_has_discount_code"
+                        domain="[('discount_code', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+
+    <menuitem name="Test1" id="menu_root"/>
+    <menuitem name="Customer" id="customer_root" parent="menu_root" action="tes1_customer_action"/>
+
+</odoo>
